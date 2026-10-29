@@ -140,7 +140,7 @@ Tách theo rule §12: logic dữ liệu, xử lý phím, markup, style nằm ở
 | T-08 | CSS | `tokens.css`, `data-grid.css` | Không hex trong rule component; contrast ≥ 4.5:1; focus ring rõ; hàng chọn có ✓ (không chỉ màu); 375px không scroll ngang | `feat(css): style data-grid with tokens` | ✅ |
 | T-09 | Wire sort/filter/pagination | `DataGrid.tsx` | Sort 3 trạng thái, `aria-sort` đúng; filter/sort về trang 1; live region đọc kết quả | `feat(state): wire sort, filter, pagination` | ✅ |
 | T-10 | Arrow + roving tabindex | `DataGrid.tsx` | Dùng `lib/keyboard.ts`; chỉ 1 `tabindex="0"`; focus không rơi về `<body>` | `feat(a11y): add arrow-key grid navigation` | ✅ |
-| T-11 | Enter chọn / Space toggle | `DataGrid.tsx` | `aria-selected` theo `id`; `onRowSelect` được gọi | `feat(a11y): add enter-select and space-toggle` | |
+| T-11 | Enter chọn / Space toggle | `DataGrid.tsx` | `aria-selected` theo `id`; `onRowSelect` được gọi | `feat(a11y): add enter-select and space-toggle` | ✅ |
 | T-12 | Audit Lighthouse + keyboard + NVDA, sửa lỗi | tuỳ lỗi | A11y 100, Best Practices 100, 0 lỗi console, CLS 0 | `fix(a11y): …` / `docs(audit): …` | |
 
 > `AI_FAILURE_AUDIT.md` không làm cho HW1 (rule §8 chỉ yêu cầu ở HW3).
