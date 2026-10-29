@@ -1,7 +1,13 @@
-import { useId, useRef, useState } from 'react';
+import { useId, useRef, useState, type FocusEvent, type KeyboardEvent } from 'react';
 import { flushSync } from 'react-dom';
-import type { ColumnDef, DataGridProps, SortState } from '../types/data-grid-contract';
+import type {
+  CellPosition,
+  ColumnDef,
+  DataGridProps,
+  SortState,
+} from '../types/data-grid-contract';
 import { filterRows, nextSort, paginate, sortRows } from '../lib/grid';
+import { getGridAction, moveCell } from '../lib/keyboard';
 
 const PAGE_SIZE = 10;
 
@@ -27,11 +33,50 @@ export default function DataGrid<T extends { id: string }>({
   const [sort, setSort] = useState<SortState<T>>({ kind: 'none' });
   const [page, setPage] = useState(1);
   const [announcement, setAnnouncement] = useState('');
+  const [activeCell, setActiveCell] = useState<CellPosition>({ row: 0, col: 0 });
   const prevRef = useRef<HTMLButtonElement>(null);
   const nextRef = useRef<HTMLButtonElement>(null);
+  const tableRef = useRef<HTMLTableElement>(null);
 
   const filtered = filterRows(data, columns, query);
   const view = paginate(sortRows(filtered, sort), page, PAGE_SIZE);
+
+  // Row 0 is the header. With no results only the header row is navigable.
+  const rowCount = view.rows.length + 1;
+  // Clamp so the single tabindex="0" cell still exists after filtering or paging shrinks the grid.
+  const active: CellPosition = {
+    row: Math.min(activeCell.row, rowCount - 1),
+    col: Math.min(activeCell.col, columns.length - 1),
+  };
+  const tabIndexFor = (row: number, col: number) =>
+    row === active.row && col === active.col ? 0 : -1;
+
+  /** Header cells with a sort button focus the button; every other cell focuses itself. */
+  function focusCell(pos: CellPosition) {
+    const cell = tableRef.current?.rows[pos.row]?.cells[pos.col];
+    const target =
+      cell?.firstElementChild instanceof HTMLButtonElement ? cell.firstElementChild : cell;
+    target?.focus();
+  }
+
+  function handleGridKeyDown(event: KeyboardEvent<HTMLTableElement>) {
+    const action = getGridAction(event.key);
+    if (action === null || action === 'select' || action === 'toggle') {
+      return;
+    }
+    event.preventDefault();
+    const next = moveCell(active, action, rowCount, columns.length);
+    setActiveCell(next);
+    focusCell(next);
+  }
+
+  /** Keeps the roving tabindex in sync when a cell is focused by mouse or Tab. */
+  function handleGridFocus(event: FocusEvent<HTMLTableElement>) {
+    const cell = event.target.closest('th, td');
+    if (cell instanceof HTMLTableCellElement && cell.parentElement instanceof HTMLTableRowElement) {
+      setActiveCell({ row: cell.parentElement.rowIndex, col: cell.cellIndex });
+    }
+  }
 
   function handleQueryChange(nextQuery: string) {
     const matches = filterRows(data, columns, nextQuery);
@@ -79,19 +124,34 @@ export default function DataGrid<T extends { id: string }>({
       </div>
 
       <div className="grid-scroll">
-        <table role="grid" aria-label={ariaLabel}>
+        <table
+          ref={tableRef}
+          role="grid"
+          aria-label={ariaLabel}
+          onKeyDown={handleGridKeyDown}
+          onFocus={handleGridFocus}
+        >
           <caption>{ariaLabel}</caption>
           <thead>
             <tr role="row">
-              {columns.map((column) => {
+              {columns.map((column, colIndex) => {
                 const direction =
                   sort.kind === 'sorted' && sort.key === column.accessorKey
                     ? sort.direction
                     : undefined;
                 return (
-                  <th key={String(column.accessorKey)} scope="col" aria-sort={direction}>
+                  <th
+                    key={String(column.accessorKey)}
+                    scope="col"
+                    aria-sort={direction}
+                    tabIndex={column.sortable ? undefined : tabIndexFor(0, colIndex)}
+                  >
                     {column.sortable ? (
-                      <button type="button" onClick={() => handleSort(column.accessorKey)}>
+                      <button
+                        type="button"
+                        tabIndex={tabIndexFor(0, colIndex)}
+                        onClick={() => handleSort(column.accessorKey)}
+                      >
                         {column.header}
                         {direction && (
                           <span aria-hidden="true">{direction === 'ascending' ? ' ▲' : ' ▼'}</span>
@@ -113,10 +173,14 @@ export default function DataGrid<T extends { id: string }>({
                 </td>
               </tr>
             ) : (
-              view.rows.map((row) => (
+              view.rows.map((row, rowIndex) => (
                 <tr key={row.id} role="row">
-                  {columns.map((column) => (
-                    <td key={String(column.accessorKey)} role="gridcell">
+                  {columns.map((column, colIndex) => (
+                    <td
+                      key={String(column.accessorKey)}
+                      role="gridcell"
+                      tabIndex={tabIndexFor(rowIndex + 1, colIndex)}
+                    >
                       {String(row[column.accessorKey])}
                     </td>
                   ))}
