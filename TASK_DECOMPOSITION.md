@@ -132,10 +132,10 @@ Tách theo rule §12: logic dữ liệu, xử lý phím, markup, style nằm ở
 |---|---|---|---|---|---|
 | T-01 | Viết WBS | `TASK_DECOMPOSITION.md` | File này | `docs(spec): add HW1 task decomposition` | ✅ |
 | T-02 | Scaffold Vite React-TS + ESLint react-hooks + Prettier | config, `index.html`, `main.tsx`, `App.tsx` | `dev`, `lint`, `typecheck`, `format:check` sạch | `chore(setup): …` | ✅ |
-| T-03 | Types | `data-grid-contract.ts` | Đúng mục 2.1, không `any` | `feat(types): define data-grid contract` | |
-| T-04 | Mock data | `employees.ts` | 20 hàng, có 1 hàng chứa `<img src=x onerror=alert(1)>` | `feat(data): add employee fixture` | |
-| T-05 | Sort / filter / paginate | `lib/grid.ts` | Không mutate input; filter `(` không crash | `feat(logic): add sort, filter, paginate` | |
-| T-06 | Keyboard logic | `lib/keyboard.ts` | Đúng mục 2.3; clamp ở biên | `feat(logic): add grid keyboard helpers` | |
+| T-03 | Types | `data-grid-contract.ts` | Đúng mục 2.1, không `any` | `feat(types): define data-grid contract` | ✅ |
+| T-04 | Mock data | `employees.ts` | 20 hàng, có 1 hàng chứa `<img src=x onerror=alert(1)>` | `feat(data): add employee fixture` | ✅ |
+| T-05 | Sort / filter / paginate | `lib/grid.ts` | Không mutate input; filter `(` không crash | `feat(logic): add sort, filter, paginate` | ✅ |
+| T-06 | Keyboard logic | `lib/keyboard.ts` | Đúng mục 2.3; clamp ở biên | `feat(logic): add grid keyboard helpers` | ✅ |
 | T-07 | Markup: landmarks + bảng + filter + pagination + live region | `DataGrid.tsx`, `App.tsx` | Native table + role grid/row/gridcell, `<label for>` cho input, skip link, `<header>`/`<main>`/`<nav>`, 1 `<h1>` | `feat(html): render semantic data-grid` | |
 | T-08 | CSS | `tokens.css`, `data-grid.css` | Không hex trong rule component; contrast ≥ 4.5:1; focus ring rõ; hàng chọn có ✓ (không chỉ màu); 375px không scroll ngang | `feat(css): style data-grid with tokens` | |
 | T-09 | Wire sort/filter/pagination | `DataGrid.tsx` | Sort 3 trạng thái, `aria-sort` đúng; filter/sort về trang 1; live region đọc kết quả | `feat(state): wire sort, filter, pagination` | |
