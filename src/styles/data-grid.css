@@ -1,0 +1,172 @@
+/* Page frame */
+header,
+main {
+  max-width: 64rem;
+  margin-inline: auto;
+  padding: var(--space-4);
+}
+
+h1 {
+  font-size: 1.75rem;
+  line-height: 1.2;
+}
+
+.skip-link {
+  position: absolute;
+  top: var(--space-2);
+  left: var(--space-2);
+  padding: var(--space-2) var(--space-4);
+  color: var(--color-on-accent);
+  background: var(--color-accent);
+  border-radius: var(--radius);
+  transform: translateY(-200%);
+}
+
+.skip-link:focus {
+  transform: none;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* Grid */
+.data-grid {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.grid-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.grid-toolbar label {
+  font-weight: 600;
+}
+
+.grid-toolbar input {
+  flex: 1 1 16rem;
+  min-height: var(--target-min);
+  padding: var(--space-2) var(--space-3);
+  font: inherit;
+  color: var(--color-text);
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+}
+
+/* Wide tables scroll here, never the page. */
+.grid-scroll {
+  overflow-x: auto;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+}
+
+.data-grid table {
+  width: 100%;
+  min-width: 40rem;
+  border-collapse: collapse;
+}
+
+.data-grid caption {
+  padding: var(--space-3) var(--space-4);
+  font-weight: 600;
+  text-align: left;
+}
+
+.data-grid th,
+.data-grid td {
+  padding: var(--space-2) var(--space-4);
+  text-align: left;
+  border-top: 1px solid var(--color-border);
+}
+
+.data-grid th {
+  font-weight: 600;
+  background: var(--color-header-bg);
+}
+
+/* Sort buttons fill the header cell so the whole cell is the click target. */
+.data-grid th:has(button) {
+  padding: 0;
+}
+
+.data-grid th button {
+  width: 100%;
+  min-height: var(--target-min);
+  padding: var(--space-2) var(--space-4);
+  font: inherit;
+  text-align: left;
+  color: var(--color-accent);
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+}
+
+.data-grid th button:hover {
+  text-decoration: underline;
+}
+
+/* Cells and buttons sit inside an overflow container, so draw the ring inside them. */
+.data-grid th button:focus-visible,
+.data-grid td:focus-visible {
+  outline-offset: calc(var(--focus-width) * -1);
+}
+
+.data-grid tbody tr:nth-child(even) {
+  background: var(--color-row-alt);
+}
+
+/* Selection is shown by colour, a left bar and a check mark, never by colour alone. */
+.data-grid tbody tr[aria-selected='true'] {
+  background: var(--color-row-selected);
+}
+
+.data-grid tbody tr[aria-selected='true'] td:first-child {
+  box-shadow: inset 4px 0 0 var(--color-accent);
+}
+
+.data-grid tbody tr[aria-selected='true'] td:first-child::before {
+  content: '✓ ';
+  font-weight: 700;
+  color: var(--color-accent);
+}
+
+/* Pagination */
+.grid-pagination {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+.grid-pagination p {
+  color: var(--color-text-muted);
+}
+
+.grid-pagination button {
+  min-width: var(--target-min);
+  min-height: var(--target-min);
+  padding: var(--space-2) var(--space-4);
+  font: inherit;
+  color: var(--color-accent);
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  cursor: pointer;
+}
+
+.grid-pagination button:disabled {
+  color: var(--color-text-muted);
+  cursor: not-allowed;
+}

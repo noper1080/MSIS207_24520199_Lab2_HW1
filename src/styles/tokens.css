@@ -1,0 +1,47 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* Contrast ratios are against --color-bg unless noted. */
+:root {
+  color-scheme: light;
+
+  --color-bg: #ffffff;
+  --color-text: #1f2328; /* 15.8:1 */
+  --color-text-muted: #57606a; /* 6.4:1 */
+  --color-accent: #0a58ca; /* 6.4:1, 5.3:1 on --color-row-selected */
+  --color-on-accent: #ffffff; /* 6.4:1 on --color-accent */
+  --color-border: #6e7781; /* 4.6:1, UI component >= 3:1 */
+  --color-header-bg: #eef1f4; /* text 13.9:1 */
+  --color-row-alt: #f6f8fa; /* text 14.8:1 */
+  --color-row-selected: #ddeafe; /* text 13.0:1 */
+  --color-focus: var(--color-accent);
+
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-6: 1.5rem;
+
+  --radius: 0.375rem;
+  --focus-width: 3px;
+  --target-min: 2.75rem;
+
+  --font-sans: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+}
+
+body {
+  font-family: var(--font-sans);
+  line-height: 1.6;
+  color: var(--color-text);
+  background: var(--color-bg);
+}
+
+:focus-visible {
+  outline: var(--focus-width) solid var(--color-focus);
+  outline-offset: 2px;
+}
