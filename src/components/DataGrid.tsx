@@ -26,6 +26,7 @@ function describeResults(total: number, page: number, pageCount: number): string
 export default function DataGrid<T extends { id: string }>({
   data,
   columns,
+  onRowSelect,
   ariaLabel,
 }: DataGridProps<T>) {
   const filterId = useId();
@@ -34,6 +35,8 @@ export default function DataGrid<T extends { id: string }>({
   const [page, setPage] = useState(1);
   const [announcement, setAnnouncement] = useState('');
   const [activeCell, setActiveCell] = useState<CellPosition>({ row: 0, col: 0 });
+  // Keyed by row id, so selection survives sorting, filtering and paging.
+  const [selectedIds, setSelectedIds] = useState<ReadonlySet<string>>(new Set());
   const prevRef = useRef<HTMLButtonElement>(null);
   const nextRef = useRef<HTMLButtonElement>(null);
   const tableRef = useRef<HTMLTableElement>(null);
@@ -59,9 +62,47 @@ export default function DataGrid<T extends { id: string }>({
     target?.focus();
   }
 
+  const rowLabel = (row: T) => String(row[columns[0].accessorKey]);
+
+  /** Enter: make this the only selected row and notify the parent. */
+  function selectRow(row: T) {
+    setSelectedIds(new Set([row.id]));
+    setAnnouncement(`${rowLabel(row)} selected.`);
+    onRowSelect?.(row);
+  }
+
+  /** Space: add or remove this row from the selection. */
+  function toggleRow(row: T) {
+    const next = new Set(selectedIds);
+    const wasSelected = next.delete(row.id);
+    if (!wasSelected) {
+      next.add(row.id);
+    }
+    setSelectedIds(next);
+    setAnnouncement(`${rowLabel(row)} ${wasSelected ? 'deselected' : 'selected'}.`);
+  }
+
   function handleGridKeyDown(event: KeyboardEvent<HTMLTableElement>) {
     const action = getGridAction(event.key);
-    if (action === null || action === 'select' || action === 'toggle') {
+    if (action === null) {
+      return;
+    }
+    if (action === 'select' || action === 'toggle') {
+      // In the header, Enter/Space belong to the native sort button.
+      const row = view.rows[active.row - 1];
+      if (active.row === 0 || row === undefined) {
+        return;
+      }
+      // preventDefault stops Space from scrolling the page; repeats would flip the toggle repeatedly.
+      event.preventDefault();
+      if (event.repeat) {
+        return;
+      }
+      if (action === 'select') {
+        selectRow(row);
+      } else {
+        toggleRow(row);
+      }
       return;
     }
     event.preventDefault();
@@ -128,6 +169,7 @@ export default function DataGrid<T extends { id: string }>({
           ref={tableRef}
           role="grid"
           aria-label={ariaLabel}
+          aria-multiselectable="true"
           onKeyDown={handleGridKeyDown}
           onFocus={handleGridFocus}
         >
@@ -174,7 +216,7 @@ export default function DataGrid<T extends { id: string }>({
               </tr>
             ) : (
               view.rows.map((row, rowIndex) => (
-                <tr key={row.id} role="row">
+                <tr key={row.id} role="row" aria-selected={selectedIds.has(row.id)}>
                   {columns.map((column, colIndex) => (
                     <td
                       key={String(column.accessorKey)}
