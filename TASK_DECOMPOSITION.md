@@ -137,7 +137,7 @@ Tách theo rule §12: logic dữ liệu, xử lý phím, markup, style nằm ở
 | T-05 | Sort / filter / paginate | `lib/grid.ts` | Không mutate input; filter `(` không crash | `feat(logic): add sort, filter, paginate` | ✅ |
 | T-06 | Keyboard logic | `lib/keyboard.ts` | Đúng mục 2.3; clamp ở biên | `feat(logic): add grid keyboard helpers` | ✅ |
 | T-07 | Markup: landmarks + bảng + filter + pagination + live region | `DataGrid.tsx`, `App.tsx` | Native table + role grid/row/gridcell, `<label for>` cho input, skip link, `<header>`/`<main>`/`<nav>`, 1 `<h1>` | `feat(html): render semantic data-grid` | ✅ |
-| T-08 | CSS | `tokens.css`, `data-grid.css` | Không hex trong rule component; contrast ≥ 4.5:1; focus ring rõ; hàng chọn có ✓ (không chỉ màu); 375px không scroll ngang | `feat(css): style data-grid with tokens` | |
+| T-08 | CSS | `tokens.css`, `data-grid.css` | Không hex trong rule component; contrast ≥ 4.5:1; focus ring rõ; hàng chọn có ✓ (không chỉ màu); 375px không scroll ngang | `feat(css): style data-grid with tokens` | ✅ |
 | T-09 | Wire sort/filter/pagination | `DataGrid.tsx` | Sort 3 trạng thái, `aria-sort` đúng; filter/sort về trang 1; live region đọc kết quả | `feat(state): wire sort, filter, pagination` | |
 | T-10 | Arrow + roving tabindex | `DataGrid.tsx` | Dùng `lib/keyboard.ts`; chỉ 1 `tabindex="0"`; focus không rơi về `<body>` | `feat(a11y): add arrow-key grid navigation` | |
 | T-11 | Enter chọn / Space toggle | `DataGrid.tsx` | `aria-selected` theo `id`; `onRowSelect` được gọi | `feat(a11y): add enter-select and space-toggle` | |
